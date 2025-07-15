@@ -6,15 +6,37 @@
     <title>Echo Group Project</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Nunito+Sans:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
+        :root {
+            /* 60% - Dominant */
+            --color-background: #1a2a45; /* Midnight Blue */
+            /* 30% - Secondary */
+            --color-card: #2c3e5a; /* Slate Blue */
+            /* 10% - Accent */
+            --color-accent: #c89b3c; /* Bronze/Gold */
+            --color-accent-light: #e6cda4;
+            --color-text-primary: #EAEFFB; /* Soft Off-white */
+            --color-text-secondary: #a9b4c7; /* Muted Blue-Gray */
+            
+            --color-medical: #6a994e; /* Muted Earthy Green */
+            --color-trauma: #bc4749;  /* Muted Earthy Red */
         }
-        h1, h2, h3, .font-header {
-            font-family: 'Montserrat', sans-serif;
+        body {
+            font-family: 'Nunito Sans', sans-serif;
+            background-color: var(--color-background);
+            color: var(--color-text-primary);
+        }
+        h1, h2, h3 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+        .card {
+            background-color: var(--color-card);
+            border: 1px solid #3b5277;
         }
         .chart-container {
             position: relative;
@@ -22,31 +44,13 @@
             max-width: 500px;
             margin-left: auto;
             margin-right: auto;
-            height: 300px;
-            max-height: 350px;
-        }
-        @media (min-width: 768px) {
-            .chart-container {
-                height: 350px;
-                max-height: 400px;
-            }
+            height: 350px;
         }
         .flowchart-step {
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            background-color: var(--color-background);
+            border: 1px solid #3b5277;
         }
-        .flowchart-step:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
-        }
-        .quadrant {
-            transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
-        }
-        .quadrant:hover {
-            background-color: #374151;
-            transform: scale(1.02);
-        }
-
-        /* Dynamic Kidney Stone Animation */
+        
         @keyframes stone-travel {
             0% { transform: translateY(-30px); opacity: 0; }
             20% { opacity: 1; }
@@ -54,172 +58,173 @@
         }
         @keyframes pipe-spasm {
             0%, 100% { transform: scaleX(1); }
-            50% { transform: scaleX(1.15); }
+            50% { transform: scaleX(1.1); }
         }
         .stone {
-            animation: stone-travel 3s linear infinite;
+            animation: stone-travel 4s linear infinite;
         }
         .pipe {
-            animation: pipe-spasm 0.8s ease-in-out infinite alternate;
+            animation: pipe-spasm 1s ease-in-out infinite alternate;
+            animation-delay: 1.5s;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-white">
+<body class="antialiased">
 
-    <div class="container mx-auto p-4 md:p-8">
+    <div class="container mx-auto p-4 md:p-12">
 
-        <header class="text-center mb-12">
-            <h1 class="text-4xl md:text-6xl font-black tracking-tight text-cyan-400">GI/GU Final Project</h1>
-            <p class="text-xl md:text-2xl text-gray-300 mt-2 font-header">Project by Echo group.</p>
+        <header class="text-center mb-24">
+            <h1 class="text-5xl md:text-7xl tracking-tight" style="color: var(--color-accent);">GI/GU Final Project</h1>
+            <p class="text-xl mt-2" style="color: var(--color-text-secondary);">Project by Echo group.</p>
         </header>
 
-        <section class="mb-12 text-center max-w-3xl mx-auto">
-            <h2 class="text-3xl font-bold mb-4 text-pink-500">Abdominal pain is more than just a "Belly Ache"</h2>
-            <p class="text-lg text-gray-300">
+        <section class="mb-24 text-center max-w-3xl mx-auto">
+            <h2 class="text-3xl mb-4" style="color: var(--color-text-primary);">Abdominal pain is more than a "Belly Ache"</h2>
+            <p class="text-lg" style="color: var(--color-text-secondary);">
                 "Abdominal pain" is one of the biggest mystery boxes in EMS. It can be a simple stomach bug or a life-threatening hemorrhage. Our job is to find the clues. 
             </p>
         </section>
 
-        <section class="mb-16">
-            <h2 class="text-3xl font-bold text-center mb-8 text-yellow-500">Physiology of the GI/GU Tract</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <section class="mb-24">
+            <h2 class="text-4xl text-center mb-12" style="color: var(--color-accent);">Physiology of the GI/GU Tract</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
                 
-                <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
-                    <h3 class="text-2xl font-bold mb-4 text-cyan-400 text-center">The GI Tract</h3>
-                    <p class="mb-6 text-gray-300">Think of it like a factory that turns food into energy. Raw materials go in, they get processed, and fuel comes out to power the body.</p>
-                    <div class="space-y-2 text-center">
-                        <div class="p-3 bg-gray-700 rounded-lg flowchart-step">Receiving Dock <span class="text-cyan-400 font-bold">▶</span> Mouth/Esophagus</div>
-                        <div class="text-2xl text-cyan-400">▼</div>
-                        <div class="p-3 bg-gray-700 rounded-lg flowchart-step">The Mixer <span class="text-cyan-400 font-bold">▶</span> Stomach</div>
-                        <div class="text-2xl text-cyan-400">▼</div>
-                        <div class="p-3 bg-gray-700 rounded-lg flowchart-step">Quality Control <span class="text-cyan-400 font-bold">▶</span> Liver & Gallbladder</div>
-                         <div class="text-2xl text-cyan-400">▼</div>
-                        <div class="p-3 bg-gray-700 rounded-lg flowchart-step">The Assembly Line <span class="text-cyan-400 font-bold">▶</span> Intestines</div>
+                <div class="card p-10 rounded-lg">
+                    <h3 class="text-3xl mb-4 text-center">The GI Tract</h3>
+                    <p class="mb-8 text-center" style="color: var(--color-text-secondary);">Think of it like a factory that turns food into energy. Raw materials go in, they get processed, and fuel comes out to power the body.</p>
+                    <div class="space-y-4 text-center">
+                        <div class="p-4 rounded-lg flowchart-step">Receiving Dock <span class="font-semibold" style="color: var(--color-accent);">▶</span> Mouth/Esophagus</div>
+                        <div class="text-2xl" style="color: var(--color-accent-light);">▼</div>
+                        <div class="p-4 rounded-lg flowchart-step">The Mixer <span class="font-semibold" style="color: var(--color-accent);">▶</span> Stomach</div>
+                        <div class="text-2xl" style="color: var(--color-accent-light);">▼</div>
+                        <div class="p-4 rounded-lg flowchart-step">Quality Control <span class="font-semibold" style="color: var(--color-accent);">▶</span> Liver & Gallbladder</div>
+                         <div class="text-2xl" style="color: var(--color-accent-light);">▼</div>
+                        <div class="p-4 rounded-lg flowchart-step">The Assembly Line <span class="font-semibold" style="color: var(--color-accent);">▶</span> Intestines</div>
                     </div>
                 </div>
 
-                <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
-                    <h3 class="text-2xl font-bold mb-4 text-pink-500 text-center">The GU System</h3>
-                    <p class="mb-6 text-gray-300">The GU system handles waste and reproduction. Think of it like a pool filter: the kidneys filter the urine, and the rest of the system drains and stores the waste.</p>
+                <div class="card p-10 rounded-lg">
+                    <h3 class="text-3xl mb-4 text-center">The GU System</h3>
+                    <p class="mb-8 text-center" style="color: var(--color-text-secondary);">The GU system handles waste and reproduction. Think of it like a pool filter: the kidneys filter the urine, and the rest of the system drains and stores the waste.</p>
                      <div class="text-center mb-4">
-                        <p class="text-lg text-gray-300">Average Urine Production (Adult):</p>
-                        <p class="text-6xl font-black text-pink-500 my-2">1-2 Liters</p>
-                        <p class="text-2xl text-gray-300">Per Day</p>
+                        <p class="text-lg" style="color: var(--color-text-secondary);">Average Urine Production (Adult):</p>
+                        <p class="text-6xl font-black my-2" style="color: var(--color-accent);">1-2 Liters</p>
+                        <p class="text-2xl" style="color: var(--color-text-secondary);">Per Day</p>
                     </div>
-                    <div class="space-y-2 text-center">
-                        <div class="p-3 bg-gray-700 rounded-lg flowchart-step">The Pool Filter <span class="text-pink-500 font-bold">▶</span> Kidneys</div>
-                        <div class="text-2xl text-pink-500">▼</div>
-                        <div class="p-3 bg-gray-700 rounded-lg flowchart-step">The Drainage Pipes <span class="text-pink-500 font-bold">▶</span> Ureters</div>
-                        <div class="text-2xl text-pink-500">▼</div>
-                        <div class="p-3 bg-gray-700 rounded-lg flowchart-step">The Waste Tank <span class="text-pink-500 font-bold">▶</span> Bladder</div>
+                    <div class="space-y-4 text-center">
+                        <div class="p-4 rounded-lg flowchart-step">The Pool Filter <span class="font-semibold" style="color: var(--color-accent);">▶</span> Kidneys</div>
+                        <div class="text-2xl" style="color: var(--color-accent-light);">▼</div>
+                        <div class="p-4 rounded-lg flowchart-step">The Drainage Pipes <span class="font-semibold" style="color: var(--color-accent);">▶</span> Ureters</div>
+                        <div class="text-2xl" style="color: var(--color-accent-light);">▼</div>
+                        <div class="p-4 rounded-lg flowchart-step">The Waste Tank <span class="font-semibold" style="color: var(--color-accent);">▶</span> Bladder</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="mb-16">
-            <h2 class="text-3xl font-bold text-center mb-8 text-pink-500">Medical Conditions & Pathophysiology</h2>
+        <section class="mb-24">
+            <h2 class="text-4xl text-center mb-12" style="color: var(--color-accent);">Medical Conditions & Pathophysiology</h2>
             
-            <div class="bg-gray-800 p-6 rounded-lg shadow-xl mb-12">
-                <h3 class="text-2xl font-bold mb-4 text-center text-cyan-400">The Four Quadrants of Pain</h3>
-                <p class="text-center mb-6 text-gray-300">This map helps locate what parts of the GI tract may be affect based on what quadrant they feel pain in.</p>
-                <div class="grid grid-cols-2 gap-2 text-center" id="quadrant-map">
-                    <div class="p-4 bg-gray-700 rounded-lg quadrant" id="ruq">
-                        <h4 class="font-bold text-lg text-cyan-400">Right Upper (RUQ)</h4>
-                        <p class="text-gray-300">Liver, Gallbladder</p>
+            <div class="card p-10 rounded-lg mb-10">
+                <h3 class="text-3xl mb-4 text-center">The Four Quadrants of Pain</h3>
+                <p class="text-center mb-8" style="color: var(--color-text-secondary);">This map helps locate what parts of the GI tract may be affect based on what quadrant they feel pain in.</p>
+                <div class="grid grid-cols-2 gap-4 text-center">
+                    <div class="p-4 rounded-lg flowchart-step">
+                        <h4 class="font-semibold text-xl">Right Upper (RUQ)</h4>
+                        <p style="color: var(--color-text-secondary);">Liver, Gallbladder</p>
                     </div>
-                    <div class="p-4 bg-gray-700 rounded-lg quadrant" id="luq">
-                        <h4 class="font-bold text-lg text-cyan-400">Left Upper (LUQ)</h4>
-                        <p class="text-gray-300">Spleen, Stomach, Pancreas</p>
+                    <div class="p-4 rounded-lg flowchart-step">
+                        <h4 class="font-semibold text-xl">Left Upper (LUQ)</h4>
+                        <p style="color: var(--color-text-secondary);">Spleen, Stomach, Pancreas</p>
                     </div>
-                    <div class="p-4 bg-gray-700 rounded-lg quadrant" id="rlq">
-                        <h4 class="font-bold text-lg text-cyan-400">Right Lower (RLQ)</h4>
-                        <p class="text-gray-300">Appendix, Ovaries (Female)</p>
+                    <div class="p-4 rounded-lg flowchart-step">
+                        <h4 class="font-semibold text-xl">Right Lower (RLQ)</h4>
+                        <p style="color: var(--color-text-secondary);">Appendix, Ovaries (Female)</p>
                     </div>
-                    <div class="p-4 bg-gray-700 rounded-lg quadrant" id="llq">
-                        <h4 class="font-bold text-lg text-cyan-400">Left Lower (LLQ)</h4>
-                        <p class="text-gray-300">Diverticulitis, Ovaries (Female)</p>
+                    <div class="p-4 rounded-lg flowchart-step">
+                        <h4 class="font-semibold text-xl">Left Lower (LLQ)</h4>
+                        <p style="color: var(--color-text-secondary);">Diverticulitis, Ovaries (Female)</p>
                     </div>
                 </div>
-                 <p class="text-center mt-4 text-yellow-400 font-bold">Pro-Tip: Epigastric pain can also be caused by cardiac issues.</p>
+                 <p class="text-center mt-6 font-semibold" style="color: var(--color-accent);">Pro-Tip: Epigastric pain can also be caused by cardiac issues.</p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
-                    <h3 class="text-2xl font-bold mb-2 text-center text-pink-500">GI Bleeds</h3>
-                    <p class="text-center mb-4 text-gray-300">Upper and lower GI bleeds present differently. Knowing the difference helps you anticipate the severity.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <div class="card p-10 rounded-lg">
+                    <h3 class="text-3xl mb-2 text-center">GI Bleeds</h3>
+                    <p class="text-center mb-6" style="color: var(--color-text-secondary);">Upper and lower GI bleeds present differently. Knowing the difference helps you anticipate the severity.</p>
                     <div class="chart-container">
                         <canvas id="giBleedChart"></canvas>
                     </div>
                 </div>
 
-                <div class="bg-gray-800 p-6 rounded-lg shadow-xl flex flex-col justify-center items-center">
-                    <h3 class="text-2xl font-bold mb-4 text-center text-pink-500">Kidney Stones</h3>
-                    <p class="text-center mb-6 text-gray-300">The pain is not caused by the kidney stone itself, but by the pipe spasming around the stone.</p>
+                <div class="card p-10 rounded-lg flex flex-col justify-center items-center">
+                    <h3 class="text-3xl mb-4 text-center">Kidney Stones</h3>
+                    <p class="text-center mb-8" style="color: var(--color-text-secondary);">The pain is not caused by the kidney stone itself, but by the pipe spasming around the stone.</p>
                     <div class="relative w-24 h-32 flex justify-center items-center overflow-hidden">
-                        <div class="pipe w-6 h-full bg-pink-800 rounded-lg"></div>
-                        <div class="stone absolute w-4 h-4 bg-yellow-300 transform rotate-45 shadow-lg"></div>
+                        <div class="pipe w-6 h-full rounded-lg" style="background-color: var(--color-accent-light);"></div>
+                        <div class="stone absolute w-4 h-4 transform rotate-45 shadow-lg" style="background-color: var(--color-accent);"></div>
                     </div>
-                    <p class="text-lg font-bold text-pink-400 mt-4">This causes the paitent unilateral, writhing Pain.</p>
+                    <p class="text-xl font-semibold mt-6">This causes unilateral, writhing pain.</p>
                 </div>
             </div>
         </section>
 
-        <section class="mb-16">
-            <h2 class="text-3xl font-bold text-center mb-8 text-cyan-500">Traumatic Conditions & Pathophysiology</h2>
+        <section class="mb-24">
+            <h2 class="text-4xl text-center mb-12" style="color: var(--color-accent);">Traumatic Conditions & Pathophysiology</h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
-                    <h3 class="text-2xl font-bold mb-2 text-center text-cyan-400">Blunt Trauma Danger</h3>
-                     <p class="text-center mb-4 text-gray-300">From falls or MVCs. The biggest threat is widespread damage to the GI organs.</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
+                <div class="card p-10 rounded-lg">
+                    <h3 class="text-3xl mb-2 text-center">Blunt Trauma Danger</h3>
+                     <p class="text-center mb-6" style="color: var(--color-text-secondary);">From falls or MVCs. The biggest threat is widespread damage to the GI organs.</p>
                     <div class="chart-container">
                         <canvas id="bluntTraumaChart"></canvas>
                     </div>
                 </div>
-                <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
-                    <h3 class="text-2xl font-bold mb-2 text-center text-cyan-400">Penetrating Trauma Danger</h3>
-                    <p class="text-center mb-4 text-gray-300">From GSWs, stabbings, or other penetrating damage.</p>
+                <div class="card p-10 rounded-lg">
+                    <h3 class="text-3xl mb-2 text-center">Penetrating Trauma Danger</h3>
+                    <p class="text-center mb-6" style="color: var(--color-text-secondary);">From GSWs, stabbings, or other penetrating damage.</p>
                     <div class="chart-container">
                         <canvas id="penetratingTraumaChart"></canvas>
                     </div>
                 </div>
             </div>
             
-            <h2 class="text-3xl font-bold text-center mb-8">Treatment Protocols</h2>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
-                    <h3 class="text-2xl font-bold mb-2 text-center text-green-500">Volvulus Treatment (Medical)</h3>
-                    <p class="text-center text-gray-400 -mt-2 mb-4 italic"> A condition where a loop of intestine twists on itself, cutting off its own blood supply.</p>
+            <h2 class="text-4xl text-center mb-12">Treatment Protocols</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <div class="card p-10 rounded-lg">
+                    <h3 class="text-3xl mb-2 text-center" style="color: var(--color-medical);">Volvulus Treatment (Medical)</h3>
+                    <p class="text-center text-gray-500 -mt-2 mb-6 italic">A condition where a loop of intestine twists on itself, cutting off its own blood supply.</p>
                      <div class="space-y-4">
-                        <div class="p-4 bg-gray-700 rounded-lg flowchart-step">
-                            <h4 class="font-bold text-lg text-green-400">BLS Care</h4>
-                            <p class="text-gray-300">Position of comfort, high-flow O2, treat for shock, rapid transport.</p>
+                        <div class="p-4 rounded-lg flowchart-step">
+                            <h4 class="font-semibold text-xl" style="color: var(--color-medical);">BLS Care</h4>
+                            <p style="color: var(--color-text-secondary);">Recognize signs of severe, sudden abdominal pain and bloating. Position of comfort, high-flow O2, and treat for shock. Rapid transport is critical.</p>
                         </div>
-                        <div class="p-4 bg-gray-700 rounded-lg flowchart-step">
-                            <h4 class="font-bold text-lg text-green-400">ALS Care</h4>
-                            <p class="text-gray-300">Establish IV access combat shock from tissue death. Provide pain management.</p>
+                        <div class="p-4 rounded-lg flowchart-step">
+                            <h4 class="font-semibold text-xl" style="color: var(--color-medical);">ALS Care</h4>
+                            <p style="color: var(--color-text-secondary);">Establish IV access for aggressive fluid resuscitation to combat shock from tissue death. Provide pain management.</p>
                         </div>
-                        <div class="p-4 bg-gray-700 rounded-lg flowchart-step">
-                            <h4 class="font-bold text-lg text-green-400">Hospital Care</h4>
-                            <p class="text-gray-300">Emergency surgery is required to untwist the intestine (de-rotation) and remove any dead tissue.</p>
+                        <div class="p-4 rounded-lg flowchart-step">
+                            <h4 class="font-semibold text-xl" style="color: var(--color-medical);">Hospital Care</h4>
+                            <p style="color: var(--color-text-secondary);">Emergency surgery is required to untwist the intestine (de-rotation) and remove any non-viable tissue.</p>
                         </div>
                     </div>
                 </div>
-                <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
-                    <h3 class="text-2xl font-bold mb-2 text-center text-red-500">Evisceration Treatment (Trauma)</h3>
-                    <p class="text-center text-gray-400 -mt-2 mb-4 italic">Intestines / Organs that are protruding from an open abdomenial wound.</p>
+                <div class="card p-10 rounded-lg">
+                    <h3 class="text-3xl mb-2 text-center" style="color: var(--color-trauma);">Evisceration Treatment (Trauma)</h3>
+                    <p class="text-center text-gray-500 -mt-2 mb-6 italic">Intestines / Organs that are protruding from an open abdomenial wound.</p>
                     <div class="space-y-4">
-                        <div class="p-4 bg-gray-700 rounded-lg flowchart-step">
-                            <h4 class="font-bold text-lg text-red-400">BLS Care</h4>
-                            <p class="text-gray-300">Do <b>NOT</b> push organs in. Cover with a moist, sterile dressing, then an occlusive dressing. Treat for shock.</p>
+                        <div class="p-4 rounded-lg flowchart-step">
+                            <h4 class="font-semibold text-xl" style="color: var(--color-trauma);">BLS Care</h4>
+                            <p style="color: var(--color-text-secondary);">Do <b>NOT</b> push organs in. Cover with a moist, sterile dressing, then an occlusive dressing. Treat for shock.</p>
                         </div>
-                        <div class="p-4 bg-gray-700 rounded-lg flowchart-step">
-                            <h4 class="font-bold text-lg text-red-400">ALS Care</h4>
-                            <p class="text-gray-300">Supportive care, establish IV access, pain management may be considered, rapid transport.</p>
+                        <div class="p-4 rounded-lg flowchart-step">
+                            <h4 class="font-semibold text-xl" style="color: var(--color-trauma);">ALS Care</h4>
+                            <p style="color: var(--color-text-secondary);">Supportive care, establish IV access, pain management may be considered, rapid transport.</p>
                         </div>
-                         <div class="p-4 bg-gray-700 rounded-lg flowchart-step">
-                            <h4 class="font-bold text-lg text-red-400">Hospital Care</h4>
-                            <p class="text-gray-300">Immediate surgery to inspect for internal damage and repair the abdominal wall.</p>
+                         <div class="p-4 rounded-lg flowchart-step">
+                            <h4 class="font-semibold text-xl" style="color: var(--color-trauma);">Hospital Care</h4>
+                            <p style="color: var(--color-text-secondary);">Immediate surgery to inspect for internal damage and repair the abdominal wall.</p>
                         </div>
                     </div>
                 </div>
@@ -227,19 +232,19 @@
         </section>
         
         <section class="mb-12 max-w-3xl mx-auto">
-            <h2 class="text-3xl font-bold text-center mb-8 text-yellow-500">BLS GI/GU Tips</h2>
-            <ul class="space-y-4 text-lg">
-                <li class="bg-gray-800 p-4 rounded-lg flex items-center shadow-xl"><span class="text-3xl mr-4">❤️</span><div><strong class="text-yellow-400">Notice The Signs:</strong> Tachycardia is an early sign of shock. A normal BP can drop suddenly.</div></li>
-                <li class="bg-gray-800 p-4 rounded-lg flex items-center shadow-xl"><span class="text-3xl mr-4">👃</span><div><strong class="text-yellow-400">Smell is a Clue:</strong> The distinct smell of melena or a GI bleed is a powerful, unforgettable clue.</div></li>
-                <li class="bg-gray-800 p-4 rounded-lg flex items-center shadow-xl"><span class="text-3xl mr-4">🥋</span><div><strong class="text-yellow-400">Look for Seatbelt Marks:</strong> A bruise across the abdomen is a major red flag for underlying organ damage after an MVC.</div></li>
-                <li class="bg-gray-800 p-4 rounded-lg flex items-center shadow-xl"><span class="text-3xl mr-4">🤫</span><div><strong class="text-yellow-400">Dont Soely Go Off Pain:</strong> A stomach full of blood might only cause mild pain. Look at the whole picture, not just the pain level.</div></li>
-                <li class="bg-gray-800 p-4 rounded-lg flex items-center shadow-xl"><span class="text-3xl mr-4">💧</span><div><strong class="text-yellow-400">Always Treat for Shock:</strong> High-flow O2, a blanket, and a supine position are simple interventions that save lives.</div></li>
+            <h2 class="text-4xl text-center mb-12" style="color: var(--color-accent);">BLS GI/GU Tips</h2>
+            <ul class="space-y-6 text-lg">
+                <li class="card p-6 rounded-lg flex items-center"><span class="text-3xl mr-5">❤️</span><div><strong style="color: var(--color-accent);">Notice The Signs:</strong> Tachycardia is an early sign of shock. A normal BP can drop suddenly.</div></li>
+                <li class="card p-6 rounded-lg flex items-center"><span class="text-3xl mr-5">👃</span><div><strong style="color: var(--color-accent);">Smell is a Clue:</strong> The distinct smell of melena or a GI bleed is a powerful, unforgettable clue.</div></li>
+                <li class="card p-6 rounded-lg flex items-center"><span class="text-3xl mr-5">🥋</span><div><strong style="color: var(--color-accent);">Look for Seatbelt Marks:</strong> A bruise across the abdomen is a major red flag for underlying organ damage after an MVC.</div></li>
+                <li class="card p-6 rounded-lg flex items-center"><span class="text-3xl mr-5">🤫</span><div><strong style="color: var(--color-accent);">Dont Soely Go Off Pain:</strong> A stomach full of blood might only cause mild pain. Look at the whole picture, not just the pain level.</div></li>
+                <li class="card p-6 rounded-lg flex items-center"><span class="text-3xl mr-5">💧</span><div><strong style="color: var(--color-accent);">Always Treat for Shock:</strong> High-flow O2, a blanket, and a supine position are simple interventions that save lives.</div></li>
             </ul>
         </section>
 
-        <footer class="text-center border-t border-gray-700 pt-8 mt-12">
-            <h3 class="text-xl font-bold mb-4 text-gray-400 text-center">Sources</h3>
-            <div class="text-sm text-gray-500 max-w-4xl mx-auto space-y-1">
+        <footer class="text-center border-t pt-10 mt-24" style="border-color: var(--color-card);">
+            <h3 class="text-2xl font-semibold mb-4" style="color: var(--color-text-secondary);">Sources</h3>
+            <div class="text-base max-w-4xl mx-auto space-y-1" style="color: #6B7280;">
                 <p>American Academy of Orthopaedic Surgeons (AAOS). Emergency Care and Transportation of the Sick and Injured, 12th Edition.</p>
                 <p>Bledsoe, B. E., Porter, R. S., & Cherry, R. A. Paramedic Care: Principles & Practice, 5th Edition.</p>
                 <p>"Abdominal Trauma." StatPearls [Internet]. Treasure Island (FL): StatPearls Publishing; 2024 Jan-.</p>
@@ -250,23 +255,41 @@
     </div>
 
     <script>
+        Chart.register(ChartDataLabels);
+
         const tooltipTitleCallback = (tooltipItems) => {
             const item = tooltipItems[0];
             let label = item.chart.data.labels[item.dataIndex];
             if (Array.isArray(label)) return label.join(' ');
             return label;
         };
+        
+        const textColor = '#EAEFFB';
+        const gridColor = 'rgba(234, 239, 251, 0.1)';
+        const accentColor = '#c89b3c';
+        const accentColorLight = '#e6cda4';
+        const medicalColor = '#6a994e';
+        const traumaColor = '#bc4749';
 
         const globalChartOptions = {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { labels: { color: '#F7FAFC', font: { size: 14 }}},
-                tooltip: { callbacks: { title: tooltipTitleCallback }}
+                legend: { labels: { color: textColor, font: { family: "'Nunito Sans', sans-serif", size: 14 }}},
+                tooltip: { 
+                    callbacks: { title: tooltipTitleCallback },
+                    backgroundColor: '#1a2a45',
+                    titleColor: '#EAEFFB',
+                    bodyColor: '#a9b4c7',
+                    borderColor: '#3b5277',
+                    borderWidth: 1,
+                    padding: 12,
+                    cornerRadius: 8
+                }
             },
             scales: {
-                y: { ticks:  { color: '#F7FAFC' }, grid: { color: 'rgba(247, 250, 252, 0.1)' }},
-                x: { ticks: { color: '#F7FAFC' }, grid: { color: 'rgba(247, 250, 252, 0.1)' }}
+                y: { ticks:  { color: textColor }, grid: { color: gridColor }},
+                x: { ticks: { color: textColor }, grid: { color: gridColor }}
             }
         };
 
@@ -278,33 +301,35 @@
                 datasets: [{
                     label: 'Upper GI Bleed',
                     data: [100, 80, 10],
-                    backgroundColor: 'rgba(236, 72, 153, 0.7)',
-                    borderColor: '#EC4899',
-                    borderWidth: 1
+                    backgroundColor: 'rgba(200, 155, 60, 0.6)',
+                    borderColor: accentColor,
+                    borderWidth: 1.5,
+                    borderRadius: 4
                 }, {
                     label: 'Lower GI Bleed',
                     data: [10, 20, 100],
-                    backgroundColor: 'rgba(6, 182, 212, 0.7)',
-                    borderColor: '#06B6D4',
-                    borderWidth: 1
+                    backgroundColor: 'rgba(230, 205, 164, 0.6)',
+                    borderColor: accentColorLight,
+                    borderWidth: 1.5,
+                    borderRadius: 4
                 }]
             },
             options: {
                 ...globalChartOptions,
-                plugins: { ...globalChartOptions.plugins, title: { display: true, text: 'Likelihood of Upper or Lower GI Bleed (%)', color: '#F7FAFC', font: {size: 16} }},
+                plugins: { ...globalChartOptions.plugins, title: { display: true, text: 'Likelihood of Upper or Lower GI Bleed (%)', color: textColor, font: {family: "'Poppins', sans-serif", size: 16} }},
                 scales: {
                     y: {
                         max: 100,
                         min: 0,
                         ticks: {
-                            color: '#F7FAFC',
+                            color: textColor,
                             stepSize: 10,
                             callback: function(value) {
                                 return value + '%';
                             }
                         },
-                        grid: { color: 'rgba(247, 250, 252, 0.1)' },
-                        title: { display: true, text: 'Likelihood (%)', color: '#F7FAFC' }
+                        grid: { color: gridColor },
+                        title: { display: true, text: 'Likelihood (%)', color: textColor }
                     },
                     x: { ...globalChartOptions.scales.x }
                 }
@@ -315,8 +340,19 @@
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { position: 'top', labels: { color: '#F7FAFC', font: {size: 14} }},
-                tooltip: { callbacks: { title: tooltipTitleCallback }}
+                legend: { position: 'top', labels: { color: textColor, font: { size: 14 }}},
+                tooltip: globalChartOptions.plugins.tooltip,
+                datalabels: {
+                    formatter: (value, ctx) => {
+                        return value + '%';
+                    },
+                    color: '#1a2a45',
+                    font: {
+                        family: "'Poppins', sans-serif", 
+                        weight: '600',
+                        size: 16
+                    }
+                }
             }
         };
 
@@ -325,7 +361,7 @@
             type: 'doughnut',
             data: {
                 labels: ['Massive Internal Bleeding', 'Visible Injury', 'Other'],
-                datasets: [{ label: 'Primary Danger', data: [75, 15, 10], backgroundColor: ['#EC4899', '#F59E0B', '#4A5568'], hoverOffset: 4 }]
+                datasets: [{ label: 'Primary Danger', data: [75, 15, 10], backgroundColor: [accentColor, accentColorLight, '#4b5563'], hoverOffset: 4, borderColor: '#2c3e5a', borderWidth: 4 }]
             },
             options: donutOptions
         });
@@ -334,8 +370,8 @@
         new Chart(penetratingTraumaCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Damage Along Path', 'Exit Wound Injury', 'Ricochet Injury'],
-                datasets: [{ label: 'Primary Danger', data: [65, 25, 10], backgroundColor: ['#06B6D4', '#10B981', '#4A5568'], hoverOffset: 4 }]
+                labels: ['Damage Along Path', 'Exit Wound Injury', 'Other'],
+                datasets: [{ label: 'Primary Danger', data: [65, 25, 10], backgroundColor: [accentColor, accentColorLight, '#4b5563'], hoverOffset: 4, borderColor: '#2c3e5a', borderWidth: 4 }]
             },
             options: donutOptions
         });
