@@ -101,6 +101,42 @@
             border-left: 30px solid white;
             margin-left: 5px;
         }
+
+        /* Interactive Game Styles */
+        .quiz-option { transition: background-color 0.2s; }
+        .quiz-option.correct { background-color: var(--color-medical) !important; }
+        .quiz-option.incorrect { background-color: var(--color-trauma) !important; }
+
+        .myth-buster-item {
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+             padding: 1rem 0;
+             border-bottom: 1px solid #3b5277;
+        }
+        .myth-buster-item:last-child {
+             border-bottom: none;
+        }
+        .verify-button {
+             padding: 0.5rem 1rem;
+             background-color: var(--color-accent-light);
+             color: var(--color-card);
+             border: none;
+             border-radius: 0.375rem;
+             cursor: pointer;
+             transition: background-color 0.3s ease, color 0.3s ease;
+             flex-shrink: 0;
+        }
+        .verify-button:hover {
+             background-color: var(--color-accent);
+             color: var(--color-background);
+        }
+        .myth-answer {
+             margin-left: 1rem;
+             font-style: italic;
+        }
+        .myth-answer.fact { color: var(--color-medical); }
+        .myth-answer.myth { color: var(--color-trauma); }
     </style>
 </head>
 <body class="antialiased">
@@ -146,11 +182,11 @@
                         <div class="p-4 rounded-lg flowchart-step">The Drainage Pipes <span class="font-semibold" style="color: var(--color-accent);">▶</span> Ureters</div>
                         <div class="text-2xl" style="color: var(--color-accent-light);">▼</div>
                         <div class="p-4 rounded-lg flowchart-step">The Waste Tank <span class="font-semibold" style="color: var(--color-accent);">▶</span> Bladder</div>
+                    </div>
                     <div class="text-center mb-4">
                         <p class="text-lg" style="color: var(--color-text-secondary);">Average Urine Production (Adult):</p>
                         <p class="text-6xl font-black my-2" style="color: var(--color-accent);">1-2 Liters</p>
                         <p class="text-2xl" style="color: var(--color-text-secondary);">Per Day</p>
-                    </div>
                     </div>
                 </div>
             </div>
@@ -270,6 +306,36 @@
             </div>
         </section>
         
+        <section class="mb-24">
+            <h2 class="text-4xl text-center mb-12" style="color: var(--color-accent);">Interactive Challenges</h2>
+            <div class="grid grid-cols-1 gap-10">
+                <div class="card p-10 rounded-lg">
+                    <h3 class="text-3xl mb-2 text-center">Triage Quiz</h3>
+                    <p class="text-center mb-6" style="color: var(--color-text-secondary);">Choose the most likely diagnosis for each scenario.</p>
+                    <div id="quiz-container" class="max-w-2xl mx-auto">
+                        <div id="start-screen">
+                            <button id="start-quiz-btn" class="w-full p-4 rounded-lg text-xl font-semibold" style="background-color: var(--color-accent); color: var(--color-background);">Start Quiz</button>
+                        </div>
+                        <div id="quiz-screen" style="display: none;">
+                            <p id="scenario-text" class="text-lg mb-4 h-24"></p>
+                            <div id="quiz-options" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+                            <button id="next-question-btn" class="w-full mt-4 p-3 rounded-lg text-center flowchart-step" style="display: none;">Next Question</button>
+                        </div>
+                         <div id="end-screen" class="text-center" style="display: none;">
+                            <h4 id="score-text" class="text-3xl mb-4"></h4>
+                            <button id="restart-quiz-btn" class="p-4 rounded-lg text-xl font-semibold" style="background-color: var(--color-accent); color: var(--color-background);">Restart Quiz</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card p-10 rounded-lg">
+                    <h3 class="text-3xl text-center mb-6">GI/GU Fact or Myth?</h3>
+                    <div id="myth-buster-container" class="space-y-4">
+                        <!-- Myths will be populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="mb-12 max-w-3xl mx-auto">
             <h2 class="text-4xl text-center mb-12" style="color: var(--color-accent);">BLS GI/GU Tips</h2>
             <ul class="space-y-6 text-lg">
@@ -413,6 +479,140 @@
                 datasets: [{ label: 'Primary Danger', data: [50, 30, 20], backgroundColor: [accentColor, accentColorLight, '#4b5563'], hoverOffset: 4, borderColor: '#2c3e5a', borderWidth: 4 }]
             },
             options: donutOptions
+        });
+
+        // Interactive Games Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            // Triage Quiz Game
+            const startScreen = document.getElementById('start-screen');
+            const quizScreen = document.getElementById('quiz-screen');
+            const endScreen = document.getElementById('end-screen');
+            const startBtn = document.getElementById('start-quiz-btn');
+            const restartBtn = document.getElementById('restart-quiz-btn');
+            
+            const scenarioText = document.getElementById('scenario-text');
+            const quizOptions = document.getElementById('quiz-options');
+            const nextButton = document.getElementById('next-question-btn');
+            const scoreText = document.getElementById('score-text');
+
+            const questions = [
+                { scenario: "A patient reports sudden, severe, tearing abdominal pain radiating to their back.", options: ["Appendicitis", "Aortic Aneurysm", "GI Bleed"], answer: 1 },
+                { scenario: "A young adult presents with RLQ pain, fever, and nausea.", options: ["Volvulus", "Kidney Stone", "Appendicitis"], answer: 2 },
+                { scenario: "An elderly patient with a history of alcoholism has coffee-ground emesis.", options: ["Evisceration", "Esophageal Varices", "Blunt Trauma"], answer: 1 },
+                { scenario: "A patient complains of writhing flank pain that comes in waves.", options: ["GI Bleed", "Kidney Stone", "Volvulus"], answer: 1 },
+                { scenario: "Following a football tackle, a player has LUQ pain and signs of shock.", options: ["Spleen Injury", "Appendicitis", "Stomach Ulcer"], answer: 0 }
+            ];
+            let currentQuestionIndex = 0;
+            let score = 0;
+
+            function startQuiz() {
+                currentQuestionIndex = 0;
+                score = 0;
+                startScreen.style.display = 'none';
+                endScreen.style.display = 'none';
+                quizScreen.style.display = 'block';
+                loadQuestion();
+            }
+
+            function loadQuestion() {
+                const question = questions[currentQuestionIndex];
+                scenarioText.textContent = question.scenario;
+                quizOptions.innerHTML = '';
+                question.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.classList.add('quiz-option', 'p-4', 'rounded-lg', 'flowchart-step');
+                    button.onclick = () => selectAnswer(index);
+                    quizOptions.appendChild(button);
+                });
+                nextButton.style.display = 'none';
+            }
+
+            function selectAnswer(selectedIndex) {
+                const question = questions[currentQuestionIndex];
+                const buttons = quizOptions.querySelectorAll('button');
+                
+                if(selectedIndex === question.answer) {
+                    score++;
+                }
+
+                buttons.forEach((btn, index) => {
+                    if (index === question.answer) {
+                        btn.classList.add('correct');
+                    } else if (index === selectedIndex) {
+                        btn.classList.add('incorrect');
+                    }
+                    btn.disabled = true;
+                });
+                if (currentQuestionIndex < questions.length - 1) {
+                    nextButton.textContent = "Next Question";
+                } else {
+                    nextButton.textContent = "Finish Quiz";
+                }
+                nextButton.style.display = 'block';
+            }
+
+            nextButton.addEventListener('click', () => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    loadQuestion();
+                } else {
+                    quizScreen.style.display = 'none';
+                    endScreen.style.display = 'block';
+                    scoreText.textContent = `You scored ${score} out of ${questions.length} correct!`;
+                }
+            });
+            
+            startBtn.addEventListener('click', startQuiz);
+            restartBtn.addEventListener('click', startQuiz);
+
+
+            // MythBuster Game
+            const mythBusterContainer = document.getElementById('myth-buster-container');
+            const myths = [
+                { myth: "Spicy foods are the main cause of stomach ulcers.", answer: "Myth: While they can irritate ulcers, most are caused by H. pylori bacteria or NSAID use.", isFact: false },
+                { myth: "Swallowed chewing gum stays in your stomach for 7 years.", answer: "Myth: It's indigestible but passes through the GI tract normally.", isFact: false },
+                { myth: "Your small intestine is where most nutrients are absorbed.", answer: "Fact: The small intestine is over 20 feet long and is the primary site for nutrient absorption.", isFact: true },
+                { myth: "Holding your urine can cause your bladder to burst.", answer: "Myth: Extremely rare. Your sphincter muscles would almost certainly give out first.", isFact: false },
+                { myth: "Drinking cranberry juice can cure a UTI.", answer: "Myth: It may help prevent some UTIs, but it cannot cure an existing infection.", isFact: false },
+                { myth: "Stress can make symptoms of GI conditions worse.", answer: "Fact: Stress has a direct impact on the gut-brain axis and can worsen conditions.", isFact: true },
+            ];
+
+            // Shuffle myths array
+            myths.sort(() => Math.random() - 0.5);
+
+            myths.forEach((item, index) => {
+                const mythEl = document.createElement('div');
+                mythEl.classList.add('myth-buster-item');
+                
+                const mythText = document.createElement('span');
+                mythText.textContent = item.myth;
+                
+                const buttonContainer = document.createElement('div');
+                buttonContainer.classList.add('flex', 'items-center');
+
+                const verifyBtn = document.createElement('button');
+                verifyBtn.textContent = 'Verify';
+                verifyBtn.classList.add('verify-button');
+                
+                const answerSpan = document.createElement('span');
+                answerSpan.classList.add('myth-answer', 'hidden');
+
+                buttonContainer.appendChild(answerSpan);
+                buttonContainer.appendChild(verifyBtn);
+
+                mythEl.appendChild(mythText);
+                mythEl.appendChild(buttonContainer);
+
+                mythBusterContainer.appendChild(mythEl);
+
+                verifyBtn.addEventListener('click', () => {
+                    answerSpan.textContent = item.answer;
+                    answerSpan.classList.remove('hidden');
+                    answerSpan.classList.add(item.isFact ? 'fact' : 'myth');
+                    verifyBtn.style.display = 'none';
+                });
+            });
         });
     </script>
 </body>
