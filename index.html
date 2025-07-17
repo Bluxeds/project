@@ -67,6 +67,40 @@
             animation: pipe-spasm 1s ease-in-out infinite alternate;
             animation-delay: 1.5s;
         }
+        .video-container {
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+            border-radius: 0.5rem;
+        }
+        .video-container .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background-color: rgba(26, 42, 69, 0.7);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s;
+            pointer-events: none; /* Allows the anchor tag to be clicked */
+        }
+        .video-container:hover .play-button {
+            background-color: rgba(200, 155, 60, 0.8);
+        }
+        .video-container .play-button::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            border-top: 20px solid transparent;
+            border-bottom: 20px solid transparent;
+            border-left: 30px solid white;
+            margin-left: 5px;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -106,17 +140,17 @@
                 <div class="card p-10 rounded-lg">
                     <h3 class="text-3xl mb-4 text-center">The GU System</h3>
                     <p class="mb-8 text-center" style="color: var(--color-text-secondary);">The GU system handles waste and reproduction. Think of it like a pool filter: the kidneys filter the urine, and the rest of the system drains and stores the waste.</p>
-                     <div class="text-center mb-4">
-                        <p class="text-lg" style="color: var(--color-text-secondary);">Average Urine Production (Adult):</p>
-                        <p class="text-6xl font-black my-2" style="color: var(--color-accent);">1-2 Liters</p>
-                        <p class="text-2xl" style="color: var(--color-text-secondary);">Per Day</p>
-                    </div>
                     <div class="space-y-4 text-center">
                         <div class="p-4 rounded-lg flowchart-step">The Pool Filter <span class="font-semibold" style="color: var(--color-accent);">▶</span> Kidneys</div>
                         <div class="text-2xl" style="color: var(--color-accent-light);">▼</div>
                         <div class="p-4 rounded-lg flowchart-step">The Drainage Pipes <span class="font-semibold" style="color: var(--color-accent);">▶</span> Ureters</div>
                         <div class="text-2xl" style="color: var(--color-accent-light);">▼</div>
                         <div class="p-4 rounded-lg flowchart-step">The Waste Tank <span class="font-semibold" style="color: var(--color-accent);">▶</span> Bladder</div>
+                    <div class="text-center mb-4">
+                        <p class="text-lg" style="color: var(--color-text-secondary);">Average Urine Production (Adult):</p>
+                        <p class="text-6xl font-black my-2" style="color: var(--color-accent);">1-2 Liters</p>
+                        <p class="text-2xl" style="color: var(--color-text-secondary);">Per Day</p>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -125,9 +159,9 @@
         <section class="mb-24">
             <h2 class="text-4xl text-center mb-12" style="color: var(--color-accent);">Medical Conditions & Pathophysiology</h2>
             
-            <div class="card p-10 rounded-lg mb-10">
+            <div class="card p-10 rounded-lg mb-10 max-w-4xl mx-auto">
                 <h3 class="text-3xl mb-4 text-center">The Four Quadrants of Pain</h3>
-                <p class="text-center mb-8" style="color: var(--color-text-secondary);">This helps to locate what parts of the GI tract may be affected based on what quadrant they feel pain in.</p>
+                <p class="text-center mb-8" style="color: var(--color-text-secondary);">This map helps locate what parts of the GI tract may be affect based on what quadrant they feel pain in.</p>
                 <div class="grid grid-cols-2 gap-4 text-center">
                     <div class="p-4 rounded-lg flowchart-step">
                         <h4 class="font-semibold text-xl">Right Upper (RUQ)</h4>
@@ -175,15 +209,15 @@
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-10 mb-12">
                 <div class="card p-10 rounded-lg">
-                    <h3 class="text-3xl mb-2 text-center">Blunt Trauma Danger</h3>
-                     <p class="text-center mb-6" style="color: var(--color-text-secondary);">From falls or MVCs. The biggest threat is widespread damage to the GI organs.</p>
+                    <h3 class="text-3xl mb-2 text-center">Common Injuries in Blunt Trauma</h3>
+                     <p class="text-center mb-6" style="color: var(--color-text-secondary);">The spleen and liver are the most commonly injured organs in blunt abdominal trauma due to their location and structure.</p>
                     <div class="chart-container">
                         <canvas id="bluntTraumaChart"></canvas>
                     </div>
                 </div>
                 <div class="card p-10 rounded-lg">
-                    <h3 class="text-3xl mb-2 text-center">Penetrating Trauma Danger</h3>
-                    <p class="text-center mb-6" style="color: var(--color-text-secondary);">From GSWs, stabbings, or other penetrating damage.</p>
+                    <h3 class="text-3xl mb-2 text-center">Common Injuries in Penetrating Trauma</h3>
+                    <p class="text-center mb-6" style="color: var(--color-text-secondary);">The hollow organs of the GI tract are most frequently injured in penetrating trauma due to their large surface area.</p>
                     <div class="chart-container">
                         <canvas id="penetratingTraumaChart"></canvas>
                     </div>
@@ -195,10 +229,14 @@
                 <div class="card p-10 rounded-lg">
                     <h3 class="text-3xl mb-2 text-center" style="color: var(--color-medical);">Volvulus Treatment (Medical)</h3>
                     <p class="text-center text-gray-500 -mt-2 mb-6 italic">A condition where a loop of intestine twists on itself, cutting off its own blood supply.</p>
+                     <a href="https://www.youtube.com/watch?v=8Ik1zmg51Ao" target="_blank" rel="noopener noreferrer" class="block video-container my-6">
+                        <img src="https://img.youtube.com/vi/8Ik1zmg51Ao/hqdefault.jpg" alt="Video thumbnail for Volvulus treatment" class="w-full h-full object-cover">
+                        <div class="play-button"></div>
+                    </a>
                      <div class="space-y-4">
                         <div class="p-4 rounded-lg flowchart-step">
                             <h4 class="font-semibold text-xl" style="color: var(--color-medical);">BLS Care</h4>
-                            <p style="color: var(--color-text-secondary);">Position of comfort, high-flow O2, treat for shock, and rapid transport.</p>
+                            <p style="color: var(--color-text-secondary);">Recognize signs of severe, sudden abdominal pain and bloating. Position of comfort, high-flow O2, and treat for shock. Rapid transport is critical.</p>
                         </div>
                         <div class="p-4 rounded-lg flowchart-step">
                             <h4 class="font-semibold text-xl" style="color: var(--color-medical);">ALS Care</h4>
@@ -206,13 +244,14 @@
                         </div>
                         <div class="p-4 rounded-lg flowchart-step">
                             <h4 class="font-semibold text-xl" style="color: var(--color-medical);">Hospital Care</h4>
-                            <p style="color: var(--color-text-secondary);">Emergency surgery is required to untwist the intestine (de-rotation) and remove any dead tissue</p>
+                            <p style="color: var(--color-text-secondary);">Emergency surgery is required to untwist the intestine (de-rotation) and remove any dead tissue.</p>
                         </div>
                     </div>
                 </div>
                 <div class="card p-10 rounded-lg">
                     <h3 class="text-3xl mb-2 text-center" style="color: var(--color-trauma);">Evisceration Treatment (Trauma)</h3>
                     <p class="text-center text-gray-500 -mt-2 mb-6 italic">Intestines / Organs that are protruding from an open abdomenial wound.</p>
+                    <img src="https://s3.us-east-2.amazonaws.com/medictests-production/ckeditor_assets/pictures/1284/content_evisceration.jpg" alt="A clinical depiction of an abdominal evisceration." class="w-full h-auto object-cover rounded-lg my-6">
                     <div class="space-y-4">
                         <div class="p-4 rounded-lg flowchart-step">
                             <h4 class="font-semibold text-xl" style="color: var(--color-trauma);">BLS Care</h4>
@@ -360,8 +399,8 @@
         new Chart(bluntTraumaCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Massive Internal Bleeding', 'Visible Injury', 'Other'],
-                datasets: [{ label: 'Primary Danger', data: [75, 15, 10], backgroundColor: [accentColor, accentColorLight, '#4b5563'], hoverOffset: 4, borderColor: '#2c3e5a', borderWidth: 4 }]
+                labels: ['Spleen Injury', 'Liver Injury', 'Kidney/Renal Injury'],
+                datasets: [{ label: 'Primary Danger', data: [40, 35, 25], backgroundColor: [accentColor, accentColorLight, '#4b5563'], hoverOffset: 4, borderColor: '#2c3e5a', borderWidth: 4 }]
             },
             options: donutOptions
         });
@@ -370,8 +409,8 @@
         new Chart(penetratingTraumaCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Damage Along Path', 'Exit Wound Injury', 'Other'],
-                datasets: [{ label: 'Primary Danger', data: [65, 25, 10], backgroundColor: [accentColor, accentColorLight, '#4b5563'], hoverOffset: 4, borderColor: '#2c3e5a', borderWidth: 4 }]
+                labels: ['Small Bowel Injury', 'Liver Injury', 'Colon Injury'],
+                datasets: [{ label: 'Primary Danger', data: [50, 30, 20], backgroundColor: [accentColor, accentColorLight, '#4b5563'], hoverOffset: 4, borderColor: '#2c3e5a', borderWidth: 4 }]
             },
             options: donutOptions
         });
